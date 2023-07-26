@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scraped Data List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Scraped Data List</h1>
+    <div id="data-list">
+        <!-- The fetched data will be displayed here -->
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Make an AJAX GET request to fetch the data from your API endpoint
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:8000/get-all-data/",
+                success: function(response) {
+                    // Upon success, display the data in the template
+                    displayData(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    // Handle error if the request fails
+                }
+            });
+
+            // Function to display the data in the template
+            function displayData(data) {
+                if (data.length > 0) {
+                    let tableHtml = "<table><thead><tr><th>Symbol</th><th>Name</th><th>Last Price</th><th>Change</th><th>Percentage Change</th></tr></thead><tbody>";
+
+                    data.forEach(function(item) {
+                        tableHtml += "<tr>";
+                        tableHtml += "<td>" + item.symbol + "</td>";
+                        tableHtml += "<td>" + item.name + "</td>";
+                        tableHtml += "<td>" + item.last_price + "</td>";
+                        tableHtml += "<td>" + item.change + "</td>";
+                        tableHtml += "<td>" + item.percentage_change + "</td>";
+                        tableHtml += "</tr>";
+                    });
+
+                    tableHtml += "</tbody></table>";
+                    $("#data-list").html(tableHtml);
+                } else {
+                    $("#data-list").html("<p>No data available.</p>");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
